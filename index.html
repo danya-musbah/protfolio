@@ -1,0 +1,1332 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Danya Musbah — Software Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&family=Noto+Sans+Arabic:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* ===== CSS VARIABLES ===== */
+  :root {
+    --bg: #0a0a0f;
+    --bg2: #111118;
+    --bg3: #16161f;
+    --surface: #1c1c28;
+    --surface2: #22223a;
+    --border: rgba(120, 119, 198, 0.18);
+    --border2: rgba(120, 119, 198, 0.32);
+    --primary: #7c6af7;
+    --primary-light: #a89df9;
+    --primary-dim: rgba(124, 106, 247, 0.15);
+    --accent: #00e5c3;
+    --accent-dim: rgba(0, 229, 195, 0.12);
+    --text: #f0f0fa;
+    --text2: #b8b8d0;
+    --text3: #7878a0;
+    --gold: #f0c060;
+    --coral: #ff7060;
+    --radius: 14px;
+    --radius-sm: 8px;
+    --shadow: 0 8px 40px rgba(0,0,0,0.5);
+    --shadow-glow: 0 0 40px rgba(124, 106, 247, 0.2);
+  }
+
+  [data-theme="light"] {
+    --bg: #f5f4ff;
+    --bg2: #eeecff;
+    --bg3: #e8e5ff;
+    --surface: #ffffff;
+    --surface2: #f0eefc;
+    --border: rgba(100, 80, 220, 0.15);
+    --border2: rgba(100, 80, 220, 0.28);
+    --primary: #5a45e8;
+    --primary-light: #7866ee;
+    --primary-dim: rgba(90, 69, 232, 0.1);
+    --accent: #009f88;
+    --accent-dim: rgba(0, 159, 136, 0.1);
+    --text: #1a1a2e;
+    --text2: #3a3a58;
+    --text3: #6060a0;
+    --gold: #c08010;
+    --coral: #c04030;
+    --shadow: 0 8px 40px rgba(90,69,232,0.12);
+    --shadow-glow: 0 0 40px rgba(90, 69, 232, 0.15);
+  }
+
+  /* ===== RESET & BASE ===== */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  
+  html { scroll-behavior: smooth; }
+  
+  body {
+    font-family: 'Sora', 'Noto Sans Arabic', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    min-height: 100vh;
+    overflow-x: hidden;
+    transition: background 0.35s, color 0.35s;
+  }
+
+  [lang="ar"] body, body.ar {
+    font-family: 'Noto Sans Arabic', 'Sora', sans-serif;
+    direction: rtl;
+  }
+
+  /* ===== BACKGROUND MESH ===== */
+  .bg-mesh {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .bg-mesh::before {
+    content: '';
+    position: absolute;
+    width: 900px; height: 900px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(124,106,247,0.08) 0%, transparent 70%);
+    top: -200px; left: -200px;
+    animation: meshFloat 18s ease-in-out infinite alternate;
+  }
+  .bg-mesh::after {
+    content: '';
+    position: absolute;
+    width: 700px; height: 700px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0,229,195,0.06) 0%, transparent 70%);
+    bottom: -150px; right: -100px;
+    animation: meshFloat 22s ease-in-out infinite alternate-reverse;
+  }
+  @keyframes meshFloat {
+    0% { transform: translate(0,0) scale(1); }
+    100% { transform: translate(60px, 40px) scale(1.1); }
+  }
+
+  /* ===== NOISE OVERLAY ===== */
+  .noise {
+    position: fixed; inset: 0; z-index: 1; pointer-events: none;
+    opacity: 0.03;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+    background-size: 200px 200px;
+  }
+
+  /* ===== LAYOUT ===== */
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    position: relative; z-index: 2;
+  }
+
+  /* ===== NAVBAR ===== */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: rgba(10, 10, 15, 0.7);
+    backdrop-filter: blur(24px) saturate(1.5);
+    border-bottom: 1px solid var(--border);
+    transition: background 0.35s, border-color 0.35s;
+  }
+  [data-theme="light"] nav {
+    background: rgba(245,244,255,0.75);
+  }
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+    padding: 0 28px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .nav-logo {
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--primary);
+    text-decoration: none;
+    letter-spacing: -0.5px;
+  }
+  .nav-logo span { color: var(--accent); }
+  .nav-links {
+    display: flex; gap: 8px; align-items: center; list-style: none;
+  }
+  .nav-links a {
+    text-decoration: none;
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--text2);
+    padding: 6px 14px;
+    border-radius: 24px;
+    transition: all 0.2s;
+    letter-spacing: 0.01em;
+  }
+  .nav-links a:hover {
+    color: var(--text);
+    background: var(--primary-dim);
+  }
+  .nav-controls { display: flex; align-items: center; gap: 8px; }
+  .btn-icon {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text2);
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+  }
+  .btn-icon:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+    background: var(--primary-dim);
+  }
+  .lang-btn {
+    font-family: 'Sora', sans-serif;
+    font-size: 0.75rem; font-weight: 600;
+    padding: 0 12px; width: auto;
+    letter-spacing: 0.05em;
+  }
+  .nav-hamburger {
+    display: none;
+    flex-direction: column; gap: 5px; cursor: pointer;
+    background: none; border: none; padding: 6px;
+  }
+  .nav-hamburger span {
+    display: block; width: 22px; height: 2px;
+    background: var(--text2); border-radius: 2px;
+    transition: all 0.3s;
+  }
+
+  /* ===== HERO ===== */
+  .hero {
+    min-height: 100vh;
+    display: flex; align-items: center;
+    padding-top: 80px;
+    position: relative;
+  }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+    width: 100%;
+  }
+  .hero-tag {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--accent-dim);
+    border: 1px solid rgba(0,229,195,0.25);
+    color: var(--accent);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    padding: 6px 14px;
+    border-radius: 24px;
+    margin-bottom: 20px;
+    letter-spacing: 0.08em;
+  }
+  .hero-tag::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: blink 2s ease-in-out infinite;
+  }
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.2; }
+  }
+  .hero-name {
+    font-size: clamp(2.4rem, 5vw, 4rem);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -1px;
+    margin-bottom: 16px;
+  }
+  .hero-name .line1 { display: block; color: var(--text); }
+  .hero-name .line2 {
+    display: block;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .hero-title {
+    font-family: 'Space Mono', monospace;
+    color: var(--text3);
+    font-size: 0.85rem;
+    font-weight: 400;
+    margin-bottom: 24px;
+    letter-spacing: 0.02em;
+  }
+  .hero-desc {
+    color: var(--text2);
+    font-size: 0.95rem;
+    line-height: 1.75;
+    max-width: 500px;
+    margin-bottom: 36px;
+  }
+  .hero-btns {
+    display: flex; gap: 12px; flex-wrap: wrap;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--primary) 0%, #5a45e8 100%);
+    color: white;
+    border: none;
+    padding: 13px 28px;
+    border-radius: var(--radius);
+    font-family: 'Sora', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex; align-items: center; gap: 8px;
+    transition: all 0.25s;
+    box-shadow: 0 4px 24px rgba(124,106,247,0.35);
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(124,106,247,0.5);
+  }
+  .btn-outline {
+    background: transparent;
+    color: var(--text2);
+    border: 1px solid var(--border2);
+    padding: 13px 28px;
+    border-radius: var(--radius);
+    font-family: 'Sora', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex; align-items: center; gap: 8px;
+    transition: all 0.25s;
+  }
+  .btn-outline:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+    background: var(--primary-dim);
+  }
+
+  /* Hero Visual */
+  .hero-visual {
+    display: flex; justify-content: center; align-items: center;
+    position: relative;
+  }
+  .hero-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 32px;
+    width: 100%;
+    max-width: 380px;
+    position: relative;
+    box-shadow: var(--shadow), var(--shadow-glow);
+  }
+  .hero-card::before {
+    content: '';
+    position: absolute; inset: -1px;
+    border-radius: 21px;
+    background: linear-gradient(135deg, rgba(124,106,247,0.3) 0%, rgba(0,229,195,0.15) 100%);
+    z-index: -1;
+  }
+  .avatar-wrap {
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2rem; font-weight: 800;
+    color: white;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 20px rgba(124,106,247,0.4);
+  }
+  .card-name {
+    font-weight: 700; font-size: 1.1rem; margin-bottom: 4px;
+  }
+  .card-role {
+    color: var(--primary-light); font-size: 0.78rem;
+    font-family: 'Space Mono', monospace; margin-bottom: 20px;
+  }
+  .card-stats {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 10px; margin-bottom: 20px;
+  }
+  .stat-box {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 12px;
+    text-align: center;
+  }
+  .stat-num {
+    font-size: 1.4rem; font-weight: 700;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .stat-label { font-size: 0.68rem; color: var(--text3); }
+  .card-badge {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--accent-dim);
+    border: 1px solid rgba(0,229,195,0.2);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    font-size: 0.78rem;
+    color: var(--accent);
+    font-family: 'Space Mono', monospace;
+  }
+  .orbit {
+    position: absolute;
+    width: 320px; height: 320px;
+    border: 1px dashed rgba(124,106,247,0.15);
+    border-radius: 50%;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    animation: spin 30s linear infinite;
+  }
+  .orbit2 {
+    width: 430px; height: 430px;
+    border-color: rgba(0,229,195,0.08);
+    animation: spin 50s linear infinite reverse;
+  }
+  @keyframes spin { 0% { transform: translate(-50%, -50%) rotate(0deg); } 100% { transform: translate(-50%, -50%) rotate(360deg); } }
+  .orbit-dot {
+    position: absolute;
+    width: 8px; height: 8px;
+    background: var(--primary);
+    border-radius: 50%;
+    top: -4px; left: calc(50% - 4px);
+    box-shadow: 0 0 10px var(--primary);
+  }
+  .orbit2 .orbit-dot {
+    background: var(--accent);
+    box-shadow: 0 0 10px var(--accent);
+  }
+
+  /* ===== SECTION COMMONS ===== */
+  section { padding: 100px 0; }
+  .section-label {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem; letter-spacing: 0.1em;
+    color: var(--primary);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .section-label::before {
+    content: '//'; opacity: 0.5;
+  }
+  .section-title {
+    font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    line-height: 1.15;
+    margin-bottom: 16px;
+  }
+  .section-sub {
+    color: var(--text2); font-size: 0.95rem;
+    max-width: 560px; line-height: 1.75;
+    margin-bottom: 60px;
+  }
+
+  /* ===== ABOUT ===== */
+  #about { background: var(--bg2); }
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: start;
+  }
+  .about-info p {
+    color: var(--text2);
+    font-size: 0.95rem; line-height: 1.8;
+    margin-bottom: 18px;
+  }
+  .about-info p strong { color: var(--text); }
+  .edu-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px 28px;
+    margin-top: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .edu-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--primary), var(--accent));
+  }
+  .edu-inst { font-size: 0.78rem; color: var(--text3); margin-bottom: 6px; font-family: 'Space Mono', monospace; }
+  .edu-degree { font-weight: 700; font-size: 1rem; margin-bottom: 4px; }
+  .edu-field { color: var(--primary-light); font-size: 0.85rem; margin-bottom: 12px; }
+  .grade-badges { display: flex; gap: 8px; flex-wrap: wrap; }
+  .grade-badge {
+    background: var(--primary-dim);
+    border: 1px solid rgba(124,106,247,0.25);
+    color: var(--primary-light);
+    font-size: 0.72rem; font-weight: 600;
+    padding: 4px 12px; border-radius: 20px;
+    font-family: 'Space Mono', monospace;
+  }
+  .grade-badge.gold {
+    background: rgba(240,192,96,0.1);
+    border-color: rgba(240,192,96,0.25);
+    color: var(--gold);
+  }
+  .contact-list { list-style: none; display: flex; flex-direction: column; gap: 12px; margin-top: 12px; }
+  .contact-list li {
+    display: flex; align-items: center; gap: 12px;
+    font-size: 0.875rem; color: var(--text2);
+  }
+  .contact-list li .icon {
+    width: 36px; height: 36px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem; flex-shrink: 0;
+  }
+  .contact-list a { color: var(--text2); text-decoration: none; transition: color 0.2s; }
+  .contact-list a:hover { color: var(--primary); }
+
+  /* Social Links */
+  .social-row {
+    display: flex; gap: 10px; flex-wrap: wrap;
+    margin-top: 24px;
+  }
+  .social-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text2);
+    font-size: 0.78rem;
+    padding: 8px 16px;
+    border-radius: 10px;
+    text-decoration: none;
+    transition: all 0.2s;
+    font-weight: 500;
+  }
+  .social-btn:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+    background: var(--primary-dim);
+    transform: translateY(-2px);
+  }
+
+  /* ===== SKILLS ===== */
+  #skills { background: var(--bg); }
+  .skills-categories {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+  }
+  .skill-category {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    transition: border-color 0.25s, box-shadow 0.25s;
+    position: relative;
+    overflow: hidden;
+  }
+  .skill-category:hover {
+    border-color: var(--border2);
+    box-shadow: var(--shadow-glow);
+  }
+  .skill-category::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    opacity: 0; transition: opacity 0.25s;
+  }
+  .skill-category:hover::before { opacity: 1; }
+  .cat-frontend::before { background: linear-gradient(90deg, #7c6af7, #a89df9); }
+  .cat-backend::before { background: linear-gradient(90deg, #00e5c3, #0099a0); }
+  .cat-db::before { background: linear-gradient(90deg, #f0c060, #e08020); }
+  .cat-security::before { background: linear-gradient(90deg, #ff7060, #cc3030); }
+  .cat-tools::before { background: linear-gradient(90deg, #60c0ff, #3090e0); }
+  .skill-cat-icon {
+    font-size: 1.5rem; margin-bottom: 10px; display: block;
+  }
+  .skill-cat-name {
+    font-weight: 700; font-size: 0.85rem; margin-bottom: 14px;
+    letter-spacing: 0.02em;
+  }
+  .skill-tags {
+    display: flex; flex-wrap: wrap; gap: 6px;
+  }
+  .skill-tag {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    color: var(--text2);
+    font-size: 0.72rem;
+    font-family: 'Space Mono', monospace;
+    padding: 4px 10px;
+    border-radius: 6px;
+    transition: all 0.2s;
+  }
+  .skill-category:hover .skill-tag {
+    border-color: var(--border2);
+    color: var(--text);
+  }
+
+  /* ===== PROJECTS ===== */
+  #projects { background: var(--bg2); }
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 24px;
+  }
+  .project-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: all 0.3s;
+    display: flex; flex-direction: column;
+    position: relative;
+  }
+  .project-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--border2);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.35), var(--shadow-glow);
+  }
+  .project-header {
+    padding: 28px 28px 20px;
+    position: relative;
+  }
+  .project-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem; color: var(--text3);
+    letter-spacing: 0.1em;
+    margin-bottom: 12px;
+    display: block;
+  }
+  .project-title {
+    font-size: 1.15rem; font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .project-subtitle {
+    color: var(--primary-light); font-size: 0.8rem;
+    margin-bottom: 14px;
+  }
+  .project-desc {
+    color: var(--text2); font-size: 0.875rem;
+    line-height: 1.7;
+  }
+  .project-footer {
+    padding: 16px 28px 24px;
+    border-top: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 12px;
+    margin-top: auto;
+  }
+  .tech-chips { display: flex; flex-wrap: wrap; gap: 5px; }
+  .chip {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    color: var(--text3); font-size: 0.66rem;
+    font-family: 'Space Mono', monospace;
+    padding: 3px 9px; border-radius: 5px;
+  }
+  .project-links { display: flex; gap: 8px; }
+  .link-btn {
+    display: flex; align-items: center; gap: 5px;
+    color: var(--text2); font-size: 0.75rem;
+    text-decoration: none; background: var(--bg3);
+    border: 1px solid var(--border);
+    padding: 6px 12px; border-radius: 8px;
+    transition: all 0.2s; font-weight: 500;
+  }
+  .link-btn:hover { color: var(--primary); border-color: var(--primary); background: var(--primary-dim); }
+  .team-badge {
+    position: absolute; top: 20px; right: 20px;
+    background: var(--bg3); border: 1px solid var(--border);
+    color: var(--text3); font-size: 0.64rem;
+    font-family: 'Space Mono', monospace;
+    padding: 3px 10px; border-radius: 20px;
+  }
+  .star-badge {
+    position: absolute; top: 20px; right: 20px;
+    background: linear-gradient(135deg, var(--primary-dim), var(--accent-dim));
+    border: 1px solid rgba(124,106,247,0.3);
+    color: var(--primary-light); font-size: 0.64rem;
+    font-family: 'Space Mono', monospace;
+    padding: 3px 10px; border-radius: 20px;
+    display: flex; align-items: center; gap: 4px;
+  }
+
+  /* ===== FOOTER ===== */
+  footer {
+    background: var(--bg3);
+    border-top: 1px solid var(--border);
+    padding: 60px 0 40px;
+  }
+  .footer-inner {
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 24px;
+  }
+  .footer-brand {
+    font-family: 'Space Mono', monospace;
+    font-weight: 700; color: var(--primary);
+    font-size: 1rem;
+  }
+  .footer-brand span { color: var(--accent); }
+  .footer-copy {
+    color: var(--text3); font-size: 0.8rem;
+    margin-top: 6px;
+  }
+  .footer-social { display: flex; gap: 8px; }
+  .footer-social a {
+    width: 38px; height: 38px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text3); font-size: 1rem;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+  .footer-social a:hover {
+    border-color: var(--primary); color: var(--primary);
+    background: var(--primary-dim); transform: translateY(-2px);
+  }
+
+  /* ===== MOBILE NAV ===== */
+  .mobile-menu {
+    display: none;
+    position: fixed; top: 64px; left: 0; right: 0;
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    z-index: 99;
+    padding: 16px 24px;
+    flex-direction: column; gap: 4px;
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a {
+    text-decoration: none; color: var(--text2);
+    font-size: 0.9rem; font-weight: 500;
+    padding: 10px 14px; border-radius: var(--radius-sm);
+    transition: all 0.2s;
+  }
+  .mobile-menu a:hover { background: var(--primary-dim); color: var(--primary); }
+
+  /* ===== DIVIDER ===== */
+  .divider {
+    width: 60px; height: 3px;
+    background: linear-gradient(90deg, var(--primary), var(--accent));
+    border-radius: 3px; margin-bottom: 24px;
+  }
+
+  /* ===== SCROLL INDICATOR ===== */
+  .scroll-progress {
+    position: fixed; top: 0; left: 0; right: 0;
+    height: 2px; background: var(--bg);
+    z-index: 101;
+  }
+  .scroll-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary), var(--accent));
+    width: 0%; transition: width 0.1s;
+  }
+
+  /* ===== FADE IN ANIMATION ===== */
+  .reveal {
+    opacity: 0; transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+  .reveal-delay-4 { transition-delay: 0.4s; }
+
+  /* ===== HIGHLIGHT CARD ===== */
+  .highlight-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 60px;
+  }
+  .highlight-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    text-align: center;
+    transition: all 0.25s;
+  }
+  .highlight-card:hover {
+    border-color: var(--border2);
+    transform: translateY(-2px);
+  }
+  .hl-icon { font-size: 1.8rem; margin-bottom: 10px; display: block; }
+  .hl-value { font-size: 1.5rem; font-weight: 800; margin-bottom: 4px; }
+  .hl-label { font-size: 0.72rem; color: var(--text3); }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 900px) {
+    .hero-grid { grid-template-columns: 1fr; gap: 48px; text-align: center; }
+    .hero-desc { max-width: 100%; }
+    .hero-btns { justify-content: center; }
+    .hero-tag { margin: 0 auto 20px; }
+    .orbit, .orbit2 { width: 260px; height: 260px; }
+    .orbit2 { width: 340px; height: 340px; }
+    .about-grid { grid-template-columns: 1fr; gap: 40px; }
+    .highlight-row { grid-template-columns: repeat(2, 1fr); }
+    .nav-links { display: none; }
+    .nav-hamburger { display: flex; }
+  }
+  @media (max-width: 600px) {
+    .hero { padding-top: 80px; }
+    .hero-name { font-size: 2rem; }
+    section { padding: 70px 0; }
+    .projects-grid { grid-template-columns: 1fr; }
+    .highlight-row { grid-template-columns: 1fr; }
+    .skills-categories { grid-template-columns: 1fr; }
+    .footer-inner { flex-direction: column; align-items: flex-start; }
+  }
+
+  /* ===== RTL SUPPORT ===== */
+  html[dir="rtl"] .hero-tag::before,
+  html[dir="rtl"] .section-label::before { content: '\\'; }
+  html[dir="rtl"] .edu-card::before,
+  html[dir="rtl"] .project-card .project-header::after { right: auto; left: auto; }
+
+  /* ===== COLORBLIND-FRIENDLY UTILS ===== */
+  /* Using shapes alongside colors, high contrast borders, patterns */
+  .badge-accessible {
+    border: 2px solid currentColor;
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-mesh"></div>
+<div class="noise"></div>
+
+<!-- Scroll Progress -->
+<div class="scroll-progress"><div class="scroll-bar" id="scrollBar"></div></div>
+
+<!-- ===== NAVBAR ===== -->
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">DM<span>.dev</span></a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#about" class="nav-link" data-en="About" data-ar="من أنا">About</a></li>
+      <li><a href="#skills" class="nav-link" data-en="Skills" data-ar="المهارات">Skills</a></li>
+      <li><a href="#projects" class="nav-link" data-en="Projects" data-ar="المشاريع">Projects</a></li>
+      <li><a href="#contact" class="nav-link" data-en="Contact" data-ar="التواصل">Contact</a></li>
+    </ul>
+    <div class="nav-controls">
+      <button class="btn-icon lang-btn" id="langToggle" title="Switch Language">AR</button>
+      <button class="btn-icon" id="themeToggle" title="Toggle Theme" aria-label="Toggle Theme">🌙</button>
+      <button class="nav-hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#about" class="nav-link" data-en="About" data-ar="من أنا">About</a>
+  <a href="#skills" class="nav-link" data-en="Skills" data-ar="المهارات">Skills</a>
+  <a href="#projects" class="nav-link" data-en="Projects" data-ar="المشاريع">Projects</a>
+  <a href="#contact" class="nav-link" data-en="Contact" data-ar="التواصل">Contact</a>
+</div>
+
+<!-- ===== HERO ===== -->
+<section class="hero" id="home">
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <div class="hero-tag" data-en="Available for Opportunities" data-ar="متاحة للفرص المهنية">Available for Opportunities</div>
+        <h1 class="hero-name">
+          <span class="line1" data-en="Danya Musbah" data-ar="دانية مصباح">Danya Musbah</span>
+          <span class="line2" data-en="Software Engineer" data-ar="مهندسة برمجيات">Software Engineer</span>
+        </h1>
+        <p class="hero-title" data-en="BSc. Information Technology · University of Tripoli" data-ar="بكالوريوس تقنية المعلومات · جامعة طرابلس">BSc. Information Technology · University of Tripoli</p>
+        <p class="hero-desc" data-en="Passionate full-stack developer from Libya, specializing in web technologies, secure backend systems, and real-time applications. GPA 92.8% with thesis project Junto scoring 94%." data-ar="مطوّرة متكاملة من ليبيا، متخصصة في تقنيات الويب، الأنظمة الخلفية الآمنة، والتطبيقات الفورية. بمعدل عام 92.8% ومشروع تخرج جونتو بتقدير 94%.">Passionate full-stack developer from Libya, specializing in web technologies, secure backend systems, and real-time applications. GPA 92.8% with thesis project Junto scoring 94%.</p>
+        <div class="hero-btns">
+          <a href="#projects" class="btn-primary">
+            <span>🚀</span>
+            <span data-en="View Projects" data-ar="استعرض المشاريع">View Projects</span>
+          </a>
+          <a href="#contact" class="btn-outline">
+            <span>✉️</span>
+            <span data-en="Get in Touch" data-ar="تواصل معي">Get in Touch</span>
+          </a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="orbit"><div class="orbit-dot"></div></div>
+        <div class="orbit orbit2"><div class="orbit-dot"></div></div>
+        <div class="hero-card">
+          <div class="avatar-wrap">DM</div>
+          <div class="card-name" data-en="Danya Mahmoud Saleh Musbah" data-ar="دانية محمود صالح مصباح">Danya Mahmoud Saleh Musbah</div>
+          <div class="card-role" data-en="// Full-Stack Developer" data-ar="// مطوّرة متكاملة">// Full-Stack Developer</div>
+          <div class="card-stats">
+            <div class="stat-box">
+              <div class="stat-num">4+</div>
+              <div class="stat-label" data-en="Projects" data-ar="مشاريع">Projects</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-num">92.8%</div>
+              <div class="stat-label" data-en="GPA Score" data-ar="المعدل العام">GPA Score</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-num">20+</div>
+              <div class="stat-label" data-en="Technologies" data-ar="تقنية">Technologies</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-num">94%</div>
+              <div class="stat-label" data-en="Thesis Score" data-ar="مشروع التخرج">Thesis Score</div>
+            </div>
+          </div>
+          <div class="card-badge">
+            <span>📍</span>
+            <span data-en="Tripoli, Libya" data-ar="طرابلس، ليبيا">Tripoli, Libya</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== ABOUT ===== -->
+<section id="about">
+  <div class="container">
+    <div class="reveal">
+      <span class="section-label" data-en="Who I Am" data-ar="من أنا">Who I Am</span>
+      <h2 class="section-title" data-en="About Me" data-ar="نبذة عني">About Me</h2>
+      <div class="divider"></div>
+    </div>
+
+    <div class="highlight-row reveal reveal-delay-1">
+      <div class="highlight-card">
+        <span class="hl-icon">🎓</span>
+        <div class="hl-value" style="background: linear-gradient(135deg, var(--primary), var(--accent)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">92.8%</div>
+        <div class="hl-label" data-en="Overall GPA" data-ar="المعدل العام">Overall GPA</div>
+      </div>
+      <div class="highlight-card">
+        <span class="hl-icon">💡</span>
+        <div class="hl-value" style="color: var(--gold);">94%</div>
+        <div class="hl-label" data-en="Thesis Score (Junto)" data-ar="تقدير مشروع جونتو">Thesis Score (Junto)</div>
+      </div>
+      <div class="highlight-card">
+        <span class="hl-icon">🌍</span>
+        <div class="hl-value" style="color: var(--accent);">LY</div>
+        <div class="hl-label" data-en="Libya · Tripoli" data-ar="ليبيا · طرابلس">Libya · Tripoli</div>
+      </div>
+    </div>
+
+    <div class="about-grid">
+      <div class="about-info reveal reveal-delay-2">
+        <p data-en="I'm <strong>Danya Mahmoud Saleh Musbah</strong>, a recent Software Engineering graduate from the University of Tripoli's Faculty of Information Technology. I'm passionate about building impactful, user-centric web applications." data-ar="أنا <strong>دانية محمود صالح مصباح</strong>، خريجة حديثة من قسم هندسة البرمجيات بكلية تقنية المعلومات، جامعة طرابلس. شغوفة ببناء تطبيقات ويب ذات أثر حقيقي.">I'm <strong>Danya Mahmoud Saleh Musbah</strong>, a recent Software Engineering graduate from the University of Tripoli's Faculty of Information Technology. I'm passionate about building impactful, user-centric web applications.</p>
+        <p data-en="My thesis project <strong>Junto</strong> — a real-time smart virtual collaboration platform — achieved a score of 94%, built entirely solo using Node.js, Express, WebRTC, Socket.io, PostgreSQL, and integrated AI services." data-ar="مشروع تخرجي <strong>جونتو</strong> — منصة تعاون افتراضي ذكية في الوقت الفعلي — حصل على تقدير 94%، وقد طوّرته بمفردي باستخدام Node.js, Express, WebRTC, Socket.io, PostgreSQL وخدمات الذكاء الاصطناعي.">My thesis project <strong>Junto</strong> — a real-time smart virtual collaboration platform — achieved a score of 94%, built entirely solo using Node.js, Express, WebRTC, Socket.io, PostgreSQL, and integrated AI services.</p>
+        <p data-en="I'm a fast learner with strong commitment and resilience. While I'm seeking my first professional role, I've led and contributed to multiple team projects with real technical depth." data-ar="أتميز بسرعة التعلم والالتزام وقدرة عالية على التحمل. وعلى الرغم من أنني أسعى لأول تجربة مهنية، فقد قدت وشاركت في عدة مشاريع فريق ذات عمق تقني حقيقي.">I'm a fast learner with strong commitment and resilience. While I'm seeking my first professional role, I've led and contributed to multiple team projects with real technical depth.</p>
+
+        <div class="edu-card">
+          <div class="edu-inst" data-en="University of Tripoli — Faculty of Information Technology" data-ar="جامعة طرابلس — كلية تقنية المعلومات">University of Tripoli — Faculty of Information Technology</div>
+          <div class="edu-degree" data-en="Bachelor of Information Technology" data-ar="بكالوريوس تقنية المعلومات">Bachelor of Information Technology</div>
+          <div class="edu-field" data-en="Software Engineering Department" data-ar="قسم هندسة البرمجيات">Software Engineering Department</div>
+          <div class="grade-badges">
+            <span class="grade-badge">GPA: 92.8%</span>
+            <span class="grade-badge gold">Thesis: 94% — Junto</span>
+          </div>
+        </div>
+
+        <div class="social-row">
+          <a href="https://github.com/danya-musbah" target="_blank" class="social-btn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+            GitHub
+          </a>
+          <a href="https://linkedin.com/in/danya-musbah-87098838b/" target="_blank" class="social-btn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5c0 1.381-1.11 2.5-2.48 2.5s-2.48-1.119-2.48-2.5c0-1.38 1.11-2.5 2.48-2.5s2.48 1.12 2.48 2.5zm.02 4.5h-5v16h5v-16zm7.982 0h-4.968v16h4.969v-8.399c0-4.67 6.029-5.052 6.029 0v8.399h4.988v-10.131c0-7.88-8.922-7.593-11.018-3.714v-2.155z"/></svg>
+            LinkedIn
+          </a>
+          <a href="https://www.youtube.com/@danya-musbah" target="_blank" class="social-btn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-2.75 12.65 12.65 0 00-8.45 0 4.83 4.83 0 01-3.77 2.75A4.83 4.83 0 012 10.46v3.08a4.83 4.83 0 011.6 3.77 12.65 12.65 0 008.45 0 4.83 4.83 0 011.6-3.77v-3.08a4.83 4.83 0 011.94-3.77zM9.65 15.5V8.5l5.77 3.5z"/></svg>
+            YouTube
+          </a>
+          <a href="https://instagram.com/danya_musbah" target="_blank" class="social-btn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+            Instagram
+          </a>
+        </div>
+      </div>
+
+      <div class="reveal reveal-delay-3">
+        <div class="section-label" style="margin-bottom: 20px;" data-en="Contact Information" data-ar="معلومات التواصل">Contact Information</div>
+        <ul class="contact-list" id="contact">
+          <li>
+            <span class="icon">📧</span>
+            <a href="mailto:danyamusbah8@gmail.com">danyamusbah8@gmail.com</a>
+          </li>
+          <li>
+            <span class="icon">📱</span>
+            <a href="tel:+218927571593">+218 927 571 593</a>
+          </li>
+          <li>
+            <span class="icon">🌐</span>
+            <a href="https://github.com/danya-musbah" target="_blank">github.com/danya-musbah</a>
+          </li>
+          <li>
+            <span class="icon">📺</span>
+            <a href="https://www.youtube.com/@danya-musbah" target="_blank">youtube.com/@danya-musbah</a>
+          </li>
+          <li>
+            <span class="icon">💼</span>
+            <a href="https://linkedin.com/in/danya-musbah-87098838b/" target="_blank">linkedin.com/in/danya-musbah</a>
+          </li>
+          <li>
+            <span class="icon">📸</span>
+            <a href="https://instagram.com/danya_musbah" target="_blank">instagram.com/danya_musbah</a>
+          </li>
+          <li>
+            <span class="icon">📍</span>
+            <span data-en="Tripoli, Libya" data-ar="طرابلس، ليبيا">Tripoli, Libya</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SKILLS ===== -->
+<section id="skills">
+  <div class="container">
+    <div class="reveal">
+      <span class="section-label" data-en="Technical Expertise" data-ar="الخبرة التقنية">Technical Expertise</span>
+      <h2 class="section-title" data-en="Skills & Technologies" data-ar="المهارات والتقنيات">Skills & Technologies</h2>
+      <div class="divider"></div>
+      <p class="section-sub" data-en="A diverse toolkit spanning frontend, backend, databases, security, and design tools — built through coursework, projects, and self-driven learning." data-ar="مجموعة أدوات متنوعة تشمل الواجهة الأمامية، الخلفية، قواعد البيانات، الأمان وأدوات التصميم — بُنيت من خلال المقررات الدراسية والمشاريع والتعلم الذاتي.">A diverse toolkit spanning frontend, backend, databases, security, and design tools — built through coursework, projects, and self-driven learning.</p>
+    </div>
+    <div class="skills-categories">
+      <div class="skill-category cat-frontend reveal reveal-delay-1">
+        <span class="skill-cat-icon">🎨</span>
+        <div class="skill-cat-name" data-en="Frontend Development" data-ar="تطوير الواجهة الأمامية">Frontend Development</div>
+        <div class="skill-tags">
+          <span class="skill-tag">HTML5</span>
+          <span class="skill-tag">CSS3</span>
+          <span class="skill-tag">JavaScript</span>
+          <span class="skill-tag">EJS</span>
+          <span class="skill-tag">Blade</span>
+          <span class="skill-tag">DOM</span>
+          <span class="skill-tag">AJAX</span>
+        </div>
+      </div>
+      <div class="skill-category cat-backend reveal reveal-delay-2">
+        <span class="skill-cat-icon">⚙️</span>
+        <div class="skill-cat-name" data-en="Backend Development" data-ar="تطوير الواجهة الخلفية">Backend Development</div>
+        <div class="skill-tags">
+          <span class="skill-tag">Node.js</span>
+          <span class="skill-tag">Express.js</span>
+          <span class="skill-tag">PHP</span>
+          <span class="skill-tag">Laravel</span>
+          <span class="skill-tag">Django</span>
+          <span class="skill-tag">Java</span>
+          <span class="skill-tag">JavaFX</span>
+          <span class="skill-tag">Python</span>
+          <span class="skill-tag">C</span>
+          <span class="skill-tag">C#</span>
+          <span class="skill-tag">Prolog</span>
+        </div>
+      </div>
+      <div class="skill-category cat-db reveal reveal-delay-3">
+        <span class="skill-cat-icon">🗄️</span>
+        <div class="skill-cat-name" data-en="Databases" data-ar="قواعد البيانات">Databases</div>
+        <div class="skill-tags">
+          <span class="skill-tag">SQL</span>
+          <span class="skill-tag">MySQL</span>
+          <span class="skill-tag">PostgreSQL</span>
+          <span class="skill-tag">Supabase</span>
+          <span class="skill-tag">MS SQL Server</span>
+          <span class="skill-tag">DB Schema</span>
+        </div>
+      </div>
+      <div class="skill-category cat-security reveal reveal-delay-1">
+        <span class="skill-cat-icon">🔐</span>
+        <div class="skill-cat-name" data-en="Security & Auth" data-ar="الأمان والمصادقة">Security & Auth</div>
+        <div class="skill-tags">
+          <span class="skill-tag">JWT Auth</span>
+          <span class="skill-tag">OAuth</span>
+          <span class="skill-tag">SQL Injection</span>
+          <span class="skill-tag">Authentication</span>
+          <span class="skill-tag">Authorization</span>
+          <span class="skill-tag">API Security</span>
+          <span class="skill-tag">Sessions</span>
+          <span class="skill-tag">Cookies</span>
+        </div>
+      </div>
+      <div class="skill-category cat-tools reveal reveal-delay-2">
+        <span class="skill-cat-icon">🛠️</span>
+        <div class="skill-cat-name" data-en="Tools & Concepts" data-ar="الأدوات والمفاهيم">Tools & Concepts</div>
+        <div class="skill-tags">
+          <span class="skill-tag">Figma</span>
+          <span class="skill-tag">Unity</span>
+          <span class="skill-tag">OOP</span>
+          <span class="skill-tag">REST APIs</span>
+          <span class="skill-tag">API Integration</span>
+          <span class="skill-tag">CupCat</span>
+          <span class="skill-tag">WebRTC</span>
+          <span class="skill-tag">Socket.io</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PROJECTS ===== -->
+<section id="projects">
+  <div class="container">
+    <div class="reveal">
+      <span class="section-label" data-en="What I've Built" data-ar="ما بنيته">What I've Built</span>
+      <h2 class="section-title" data-en="Projects" data-ar="المشاريع">Projects</h2>
+      <div class="divider"></div>
+      <p class="section-sub" data-en="A selection of academic and personal projects demonstrating full-stack capabilities, teamwork, and technical depth." data-ar="مجموعة مختارة من المشاريع الأكاديمية والشخصية التي تُبرز القدرات التقنية الكاملة، روح الفريق، والعمق التقني.">A selection of academic and personal projects demonstrating full-stack capabilities, teamwork, and technical depth.</p>
+    </div>
+
+    <div class="projects-grid">
+
+      <!-- Junto - Featured -->
+      <div class="project-card reveal reveal-delay-1" style="grid-column: span 1; border-color: rgba(124,106,247,0.35);">
+        <div class="project-header">
+          <span class="star-badge">⭐ <span data-en="Thesis Project" data-ar="مشروع التخرج">Thesis Project</span></span>
+          <span class="project-num" data-en="Project 04 · Solo Build" data-ar="المشروع 04 · منفردة">//04 · Solo Build</span>
+          <div class="project-title">Junto</div>
+          <div class="project-subtitle" data-en="Real-Time Smart Virtual Collaboration" data-ar="منصة تعاون افتراضي ذكي في الوقت الفعلي">Real-Time Smart Virtual Collaboration</div>
+          <p class="project-desc" data-en="A fully integrated web-based virtual collaboration platform featuring real-time audio/video via WebRTC, instant messaging via Socket.io, AI-powered meeting summaries, live translation, speech-to-text, a smart chatbot, workspace management, calendar integration with Google Calendar, collaborative whiteboard, and an admin panel. Built entirely solo." data-ar="منصة ويب متكاملة للتعاون الافتراضي تتضمن: صوت وفيديو في الوقت الفعلي عبر WebRTC، مراسلة فورية عبر Socket.io، ملخصات اجتماعات بالذكاء الاصطناعي، ترجمة فورية، تحويل الكلام إلى نص، شات بوت ذكي، إدارة مساحات العمل، تكامل مع Google Calendar، لوحة بيضاء تعاونية، ولوحة تحكم إدارية. طُوِّرت بمفردها تماماً.">A fully integrated web-based virtual collaboration platform featuring real-time audio/video via WebRTC, instant messaging via Socket.io, AI-powered meeting summaries, live translation, speech-to-text, a smart chatbot, workspace management, calendar integration with Google Calendar, collaborative whiteboard, and an admin panel. Built entirely solo.</p>
+        </div>
+        <div class="project-footer">
+          <div class="tech-chips">
+            <span class="chip">Node.js</span>
+            <span class="chip">Express</span>
+            <span class="chip">WebRTC</span>
+            <span class="chip">Socket.io</span>
+            <span class="chip">PostgreSQL</span>
+            <span class="chip">Gemini AI</span>
+            <span class="chip">EJS</span>
+          </div>
+          <div class="project-links">
+            <a href="https://github.com/2212857194/Junto" target="_blank" class="link-btn">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+              <span data-en="GitHub" data-ar="قيت هب">GitHub</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- ElectroHub -->
+      <div class="project-card reveal reveal-delay-2">
+        <div class="project-header">
+          <span class="team-badge" data-en="Team · 6 members" data-ar="فريق · 6 أعضاء">Team · 6 members</span>
+          <span class="project-num">//03</span>
+          <div class="project-title">ElectroHub</div>
+          <div class="project-subtitle" data-en="Real-Time E-Commerce Platform" data-ar="متجر إلكتروني في الوقت الفعلي">Real-Time E-Commerce Platform</div>
+          <p class="project-desc" data-en="A full-featured e-commerce store for electronics built with Laravel. Includes product listings, cart, user auth, admin management, and real-time order handling." data-ar="متجر إلكتروني متكامل لبيع المنتجات الإلكترونية بُني بـ Laravel. يتضمن قوائم المنتجات، السلة، المصادقة، لوحة إدارة، ومعالجة الطلبات في الوقت الفعلي.">A full-featured e-commerce store for electronics built with Laravel. Includes product listings, cart, user auth, admin management, and real-time order handling.</p>
+        </div>
+        <div class="project-footer">
+          <div class="tech-chips">
+            <span class="chip">Laravel</span>
+            <span class="chip">PHP</span>
+            <span class="chip">MySQL</span>
+            <span class="chip">Blade</span>
+            <span class="chip">JS</span>
+          </div>
+          <div class="project-links">
+            <a href="https://github.com/ituotse/itse408-project-4" target="_blank" class="link-btn">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+              GitHub
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Wonder Libya -->
+      <div class="project-card reveal reveal-delay-3">
+        <div class="project-header">
+          <span class="team-badge" data-en="Team · 4 members" data-ar="فريق · 4 أعضاء">Team · 4 members</span>
+          <span class="project-num">//02</span>
+          <div class="project-title">Wonder Libya</div>
+          <div class="project-subtitle" data-en="Tourism & Travel Booking Website" data-ar="موقع السياحة والسفر">Tourism & Travel Booking Website</div>
+          <p class="project-desc" data-en="A tourism website for Libya featuring place discovery, categorized destinations, user ratings & reviews, trip booking, admin management, and an interactive travel guide." data-ar="موقع سياحي لليبيا يتضمن اكتشاف الأماكن، الوجهات المصنفة، تقييمات المستخدمين وتعليقاتهم، حجز الرحلات، لوحة إدارة، ودليل سفر تفاعلي.">A tourism website for Libya featuring place discovery, categorized destinations, user ratings & reviews, trip booking, admin management, and an interactive travel guide.</p>
+        </div>
+        <div class="project-footer">
+          <div class="tech-chips">
+            <span class="chip">PHP</span>
+            <span class="chip">HTML</span>
+            <span class="chip">CSS</span>
+            <span class="chip">JS</span>
+            <span class="chip">AJAX</span>
+            <span class="chip">MySQL</span>
+          </div>
+          <div class="project-links">
+            <a href="https://github.com/2211858249/archiITSE411" target="_blank" class="link-btn">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+              GitHub
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bike Store -->
+      <div class="project-card reveal reveal-delay-1">
+        <div class="project-header">
+          <span class="team-badge" data-en="Team · 3 members" data-ar="فريق · 3 أعضاء">Team · 3 members</span>
+          <span class="project-num">//01</span>
+          <div class="project-title" data-en="Java Bike Store" data-ar="متجر دراجات جافا">Java Bike Store</div>
+          <div class="project-subtitle" data-en="Desktop Inventory Management System" data-ar="نظام إدارة متجر مكتبي">Desktop Inventory Management System</div>
+          <p class="project-desc" data-en="A desktop bike store management system built with Java and SQL Server. Features product catalog, inventory tracking, customer orders, and sales reports via a JavaFX GUI." data-ar="نظام إدارة متجر دراجات مكتبي مبني بـ Java و SQL Server. يتضمن كتالوج المنتجات، تتبع المخزون، طلبات العملاء، وتقارير المبيعات عبر واجهة JavaFX.">A desktop bike store management system built with Java and SQL Server. Features product catalog, inventory tracking, customer orders, and sales reports via a JavaFX GUI.</p>
+        </div>
+        <div class="project-footer">
+          <div class="tech-chips">
+            <span class="chip">Java</span>
+            <span class="chip">JavaFX</span>
+            <span class="chip">SQL Server</span>
+            <span class="chip">JDBC</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <div>
+        <div class="footer-brand">DM<span>.dev</span></div>
+        <div class="footer-copy" data-en="Danya Mahmoud Saleh Musbah · Tripoli, Libya" data-ar="دانية محمود صالح مصباح · طرابلس، ليبيا">Danya Mahmoud Saleh Musbah · Tripoli, Libya</div>
+        <div class="footer-copy" style="margin-top: 4px;">
+          <a href="mailto:danyamusbah8@gmail.com" style="color: var(--primary); text-decoration: none;">danyamusbah8@gmail.com</a>
+        </div>
+      </div>
+      <div class="footer-social">
+        <a href="https://github.com/danya-musbah" target="_blank" title="GitHub" aria-label="GitHub">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+        </a>
+        <a href="https://linkedin.com/in/danya-musbah-87098838b/" target="_blank" title="LinkedIn" aria-label="LinkedIn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5c0 1.381-1.11 2.5-2.48 2.5s-2.48-1.119-2.48-2.5c0-1.38 1.11-2.5 2.48-2.5s2.48 1.12 2.48 2.5zm.02 4.5h-5v16h5v-16zm7.982 0h-4.968v16h4.969v-8.399c0-4.67 6.029-5.052 6.029 0v8.399h4.988v-10.131c0-7.88-8.922-7.593-11.018-3.714v-2.155z"/></svg>
+        </a>
+        <a href="https://www.youtube.com/@danya-musbah" target="_blank" title="YouTube" aria-label="YouTube">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.495 6.205a3.007 3.007 0 0 0-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 0 0 .527 6.205a31.247 31.247 0 0 0-.522 5.805 31.247 31.247 0 0 0 .522 5.783 3.007 3.007 0 0 0 2.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 0 0 2.088-2.088 31.247 31.247 0 0 0 .5-5.783 31.247 31.247 0 0 0-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></svg>
+        </a>
+        <a href="https://instagram.com/danya_musbah" target="_blank" title="Instagram" aria-label="Instagram">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ===== JS ===== -->
+<script>
+  // ===== THEME =====
+  const themeBtn = document.getElementById('themeToggle');
+  const root = document.documentElement;
+  let isDark = true;
+
+  themeBtn.addEventListener('click', () => {
+    isDark = !isDark;
+    root.setAttribute('data-theme', isDark ? 'dark' : 'light');
+    themeBtn.textContent = isDark ? '🌙' : '☀️';
+  });
+
+  // ===== LANGUAGE =====
+  const langBtn = document.getElementById('langToggle');
+  let isAr = false;
+
+  langBtn.addEventListener('click', () => {
+    isAr = !isAr;
+    langBtn.textContent = isAr ? 'EN' : 'AR';
+    root.setAttribute('dir', isAr ? 'rtl' : 'ltr');
+    root.setAttribute('lang', isAr ? 'ar' : 'en');
+
+    document.querySelectorAll('[data-en]').forEach(el => {
+      const key = isAr ? 'ar' : 'en';
+      const val = el.getAttribute('data-' + key);
+      if (val) {
+        if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+          el.placeholder = val;
+        } else {
+          el.innerHTML = val;
+        }
+      }
+    });
+
+    // Update font-family for Arabic
+    if (isAr) {
+      document.body.style.fontFamily = "'Noto Sans Arabic', 'Sora', sans-serif";
+    } else {
+      document.body.style.fontFamily = "'Sora', 'Noto Sans Arabic', sans-serif";
+    }
+  });
+
+  // ===== MOBILE MENU =====
+  const hamburger = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobileMenu');
+
+  hamburger.addEventListener('click', () => {
+    mobileMenu.classList.toggle('open');
+  });
+
+  mobileMenu.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => mobileMenu.classList.remove('open'));
+  });
+
+  // ===== SCROLL PROGRESS =====
+  window.addEventListener('scroll', () => {
+    const pct = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+    document.getElementById('scrollBar').style.width = pct + '%';
+  });
+
+  // ===== REVEAL ON SCROLL =====
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1 });
+
+  reveals.forEach(r => observer.observe(r));
+
+  // Make hero visible immediately
+  document.querySelectorAll('.hero .reveal').forEach(el => el.classList.add('visible'));
+
+  // ===== SMOOTH SCROLL =====
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+
+  // ===== HERO ENTRANCE =====
+  const heroEls = document.querySelectorAll('.hero-tag, .hero-name, .hero-title, .hero-desc, .hero-btns, .hero-card');
+  heroEls.forEach((el, i) => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = `opacity 0.6s ease ${i * 0.1}s, transform 0.6s ease ${i * 0.1}s`;
+    requestAnimationFrame(() => {
+      setTimeout(() => {
+        el.style.opacity = '1';
+        el.style.transform = 'translateY(0)';
+      }, 100);
+    });
+  });
+</script>
+</body>
+</html>
